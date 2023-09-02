@@ -30,6 +30,13 @@ class ViewController: UIViewController {
         return label
     }()
     private let switchButton = UISwitch()
+    private let accessibilityPostButton = {
+        let button = UIButton()
+        button.setTitle("노티", for: .normal)
+        button.setTitleColor(.systemBlue, for: .normal)
+        button.setTitleColor(.blue, for: .highlighted)
+        return button
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -42,6 +49,7 @@ class ViewController: UIViewController {
         profileContainerView.addSubview(thumbnailImageView)
         profileContainerView.addSubview(switchButton)
         profileContainerView.addSubview(label)
+        view.addSubview(accessibilityPostButton)
         
         profileContainerView.snp.makeConstraints {
             $0.top.equalTo(view.safeAreaLayoutGuide).offset(20)
@@ -60,6 +68,9 @@ class ViewController: UIViewController {
             $0.leading.equalTo(thumbnailImageView)
             $0.bottom.equalToSuperview()
             $0.trailing.lessThanOrEqualToSuperview()
+        }
+        accessibilityPostButton.snp.makeConstraints {
+            $0.center.equalToSuperview()
         }
     }
     
@@ -120,6 +131,13 @@ class ViewController: UIViewController {
         thumbnailImageView.accessibilityValue = "벨류"
         thumbnailImageView.accessibilityTraits = .image
         thumbnailImageView.accessibilityHint = "힌트 문구입니다."
-        //
+        
+        accessibilityPostButton.addTarget(self, action: #selector(postNoti), for: .touchUpInside)
+    }
+    
+    @objc
+    private func postNoti() {
+        guard UIAccessibility.isVoiceOverRunning else { return }
+        UIAccessibility.post(notification: .pageScrolled, argument: "노티 샘플")
     }
 }
